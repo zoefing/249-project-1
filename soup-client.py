@@ -1,10 +1,4 @@
 #!/usr/bin/env python3
-# Simple server test client
-#
-# The application opens a connection to the server, then goes into a loop where it prompts
-# the user to provide a string message to be sent over to the server for processing. Then
-# the client waits for a reply and prints it. To exit and disconnect, the user can enter 'quit'
-# at the prompt.
 
 import socket
 import sys
