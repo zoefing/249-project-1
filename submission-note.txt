@@ -1,0 +1,218 @@
+Overview of Application
+This application mirrors a soup themed grocery store interaction between the shopper (client) and store (server). 
+In this application, the user can browse the store aisles, make a purchase, and return any items they have purchased. 
+The browse function is just a bonus, hence why it does not take in two arguments as required. The central functions which 
+meet the assignment criteria are buy() and return_item(), which both taken in product and quantity respectively.
+
+The commands are formatted in a way that is easily understandable and readable, but require a specified response. Typos are
+generally not accepted.
+
+
+Client->Server Message Format
+The client interacts with the server's three operations: browse, buy, and return_item.
+
+The client side of the browse() function allows the user to enter their aisle of choice, whether they want to make a purchase, 
+what they want to purchase, and what quantity of said product they want to purchase. All information is received by user input.
+
+The client side of the buy() function allows the user to enter their aisle of choice, whether they want to make a purchase, 
+what they want to purchase, what quantity of said product they want to purchase, and then a confirmation of the purchase (if valid). 
+All information is received by user input.
+
+The client side of the return_item() function allows the user to enter their desired item to return, how many of this item, and then a
+confirmation of the return. All information is received by user input.
+
+
+Server->Client Message Format
+The server can process three operations: browse, buy, and return_item based on client input.
+
+The client side of the browse() function starts in browse_init() which takes user input from the client to determine aisle of choice
+and then checks if the input is valid and, if valid, this information is then fed into the browse() function. The browse() function
+then shows the inventory of that aisle and sends them to the user. It then checks to see whether the user wants to buy something, and
+if yes then it checks the user's inputted product to ensure it is in the relevant aisle and prompts the use for the quantity of said
+product to purchase. Then, this information is then fed into the buy() function. 
+
+The client side of the buy() function starts in buy_init() which takes user input from the client to determine the aisle of choice
+and then checks if the input is valid and, if valid, prompts whether the user the user wants to buy something, and
+if yes then it checks the user's inputted product to ensure it is in the relevant aisle and prompts the use for the quantity of said
+product to purchase. Then, this information is then fed into the buy() function. The buy() function takes user input from the 
+client to establish the aisle of choice, and use this information to check the user inputted product and then quantity of said 
+product to purchase. Then, buy() adds the purchased product(s) to the user's inventory.
+
+The client side of the return_item() function starts in init_return_item() which takes user input from the client to determine what
+the client wants to return, then checks if the client has this product in their inventory. If they do, then the function prompts the
+client for their quantity to return. It then ensures that the user possesses this many of the product. If so, the product and quantity
+information are passed into the return_item() function in which the quantity of the product is removed from the inventory.
+
+
+Example Outputs
+
+Command Line Trace for Server:
+server starting - listening for connections at IP 127.0.0.1 and port 65432
+Connected established with ('127.0.0.1', 63015)
+
+Received client message:
+'browse' [6 bytes]
+
+sending message
+'Sally's Soup Supplies contains four aisles: 
+1. produce 
+2. dry goods 
+3. stocks and more 
+4. spice supply
+What aisle would you like to browse?'
+to client
+
+received reply:
+'1'
+from client [1 bytes]
+
+sending message
+'You are in the produce aisle.
+On the shelves you see:
+- green onion
+- red onion
+- yellow onion
+- white onion
+- carrot
+- tomato
+- celery stick
+- potato
+- sweet potato
+- corn cob
+Would you like to purchase something? (yes/no)'
+to client
+
+received reply:
+'yes'
+from client [3 bytes]
+
+sending message
+'What would you like to purchase?'
+to client
+
+received reply:
+'carrot'
+from client [6 bytes]
+
+sending message
+'What quantity of carrot would you like to buy?'
+to client
+
+received reply:
+'1'
+from client [1 bytes]
+
+sending message
+'You are purchasing 1 carrot. Correct? (yes/no)'
+to server
+
+received reply
+'yes'
+from client [3 bytes]
+
+sending message
+'You have purchased 1 carrot.
+
+Inventory:
+{'carrot': '1'}
+
+All good? (yes/no)' to server
+received reply
+'yes'
+from client [3 bytes]
+
+sending message
+'Operation complete' to server
+server is done!
+
+
+Command Line Trace for Client:
+client starting - connecting to server at IP 127.0.0.1 and port 65432
+connection established
+
+Welcome to Sally's Soup Supplies. What would you like to do? Input 'browse' to browse the aisles, 'buy' to make a purchase, or 'return' to return an item:
+
+browse
+
+sending request 'browse' to server
+request sent, waiting for reply
+
+received reply:
+'Sally's Soup Supplies contains four aisles: 
+1. produce 
+2. dry goods 
+3. stocks and more 
+4. spice supply
+What aisle would you like to browse?'
+from server
+
+Please enter the aisle number you would like to browse:
+1
+
+received reply:
+'You are in the produce aisle.
+On the shelves you see:
+- green onion
+- red onion
+- yellow onion
+- white onion
+- carrot
+- tomato
+- celery stick
+- potato
+- sweet potato
+- corn cob
+Would you like to purchase something? (yes/no)'
+from server
+yes
+
+received reply:
+'What would you like to purchase?'
+from server
+carrot
+
+sending request 'carrot' to server
+request sent, waiting for reply
+
+received reply:
+'What quantity of carrot would you like to buy?'
+from server
+1
+
+received reply:
+'You are purchasing 1 carrot. Correct? (yes/no)'
+from server
+yes
+
+sending request 'yes' to server
+request sent, waiting for reply
+
+received reply:
+'You have purchased 1 carrot.
+
+Inventory:
+{'carrot': '1'}
+
+All good? (yes/no)'
+from server
+yes
+
+sending request 'yes' to server
+request sent, waiting for reply
+
+received reply:
+'Operation complete'
+from server
+
+Is there anything else you would like to do? (yes/no) no
+client quitting at operator request
+
+
+Acknowledgments:
+My friend Giulli who helped test-run my code.
+
+
+References used:
+https://www.w3schools.com/python/python_reference.asp
+https://docs.python.org/3/library/socket.html
+https://realpython.com/python-sockets
